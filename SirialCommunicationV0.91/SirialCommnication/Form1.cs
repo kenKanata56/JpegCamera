@@ -32,14 +32,14 @@ namespace SirialCommnication
         {
             try
             {
-                if (comboBox2.Text == "" || comboBox3.Text == "")
+                if (comboBox2.Text == "" )
                 {
                     richTextBox1.Text = "Please select port settings";
                 }
                 else
                 {
                     serialPort1.PortName = comboBox2.Text;
-                    serialPort1.BaudRate = Convert.ToInt32(comboBox3.Text);
+                    serialPort1.BaudRate = 115200;
                     serialPort1.Open();
                     progressBar1.Value = 100;
                     button3.Enabled = false;
@@ -54,6 +54,9 @@ namespace SirialCommnication
 
             backgroundWorker1.WorkerSupportsCancellation = true;
             backgroundWorker1.RunWorkerAsync();
+
+            backgroundPictChecker.WorkerSupportsCancellation = true;
+            backgroundPictChecker.RunWorkerAsync();
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -67,11 +70,9 @@ namespace SirialCommnication
         }
 
 
-        byte[] rec = new byte[1024]; 
+        byte[] rec = new byte[4096]; 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
-            System.Threading.Thread.Sleep(1000);
-
             int state = 0;
 
             for (; ; )
@@ -81,15 +82,13 @@ namespace SirialCommnication
                     e.Cancel = true;
                     return;
                 }
-
                 if (RecDataCheck())
                 {
                     if (state == 0)
                     {
-                        if (StartDataWait() == 1)
-                        {
-                            state = 1;
-                        }
+                        AllgetData();
+                        state = 1;
+                        
                     }
                     else
                     {
@@ -101,15 +100,48 @@ namespace SirialCommnication
                 }
                 else
                 {
-                    System.Threading.Thread.Sleep(10);
+                   //System.Threading.Thread.Sleep(100);
                 }
+                
             }
         }
         MemoryStream ms;
         ArrayList rcv_data = new ArrayList();
         int pictsize = 0;
+        byte[] buf = new byte[0xFFFF];
+
+        private int AllgetData()
+        {
+            DisposeMs();
+            ms = new MemoryStream(0xFFFF);
+
+            while (true)
+            {
+                int read = RecData(0, rec.Length);
+                //int read = serialPort1.Read(buf, 0, buf.Length);
+
+                if (read > 0)
+                {
+                    ms.Write(rec, 0, read);
+                    
+                    System.Threading.Thread.Sleep(100);
+                }
+                else if(read == 0)
+                {
+                    break;
+                }
+                else 
+                {
+
+                }
+                StatusText("read:" + read);
+            }
+            StatusText("break:");
+            return 1;
+        }
         private int StartDataWait()
         {
+            
             byte[] start = new byte[2];
             start[0] = 0xFF;
             start[1] = 0xD8;
@@ -128,7 +160,7 @@ namespace SirialCommnication
                 }
             }
             DisposeMs();
-            ms = new MemoryStream();
+            ms = new MemoryStream(0xFFFF);
             ms.Write(start, 0, 2);
 
             int count = rcv_data.Count;
@@ -144,7 +176,7 @@ namespace SirialCommnication
                 return -1;
             }
             ms.Write(rec, 0, pictsize - 2);
-            StatusText("Start");
+            //StatusText("Start");
             return 1;
         }
 
@@ -152,12 +184,18 @@ namespace SirialCommnication
 
             int[] counter = new int[2];
             int cnt = 1;
+            int datasize = pictsize;
 
             for (; ; )
             {
                 counter[1] = (cnt & 0xFF00) >> 8;
                 counter[0] = (cnt & 0x00FF);
 
+                if (RecData(0, 4) < 0)
+                {
+                    return -1;
+                }
+                /*
                 for (int i = 0; i < 2; i++)
                 {
 
@@ -168,24 +206,29 @@ namespace SirialCommnication
 
                     if (rec[0] != counter[i])
                     {
-                        return -1;
+                       // return -1;
                     }
                 }
-
-                int size = getData();
+                 * */
+                datasize = rec[2] + rec[3] * 256;
+                //int size = getData();
+                /*
                 if (0 > size || size > 1024)
                 {
                     return -1;
                 }
-                if (RecData(0, size + 2) < 0)
+                 * */
+                if (RecData(0, datasize + 2) < 0)
                 {
                     return -1;
                 }
-                ms.Write(rec, 0, size);
-                StatusText("packet[" + cnt + "] size:" + size);
+                ms.Write(rec, 0, datasize);
+                //StatusText("packet[" + cnt + "]");
 
-                if (size != pictsize)
+
+                if (datasize != pictsize)
                 {
+                    StatusText("End");
                     DateTime dateNow = DateTime.Now;
                     String fileName = dateNow.ToString("yyyyMMddHHmmss");
                     string fname = "pict" + fileName + ".jpg";
@@ -214,6 +257,7 @@ namespace SirialCommnication
 
                         
                     }));
+                    //System.Threading.Thread.Sleep(1000);
                     return -1;
                 }
                 cnt++;
@@ -257,7 +301,7 @@ namespace SirialCommnication
 
             if (serialPort1.IsOpen == false)
             {
-                return -1;
+                return -2;
             }
 
             try
@@ -275,6 +319,7 @@ namespace SirialCommnication
             catch(Exception){
                 i = -1;
             }
+
             return i;
         }
 
@@ -291,6 +336,20 @@ namespace SirialCommnication
         }
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            System.Threading.Thread.Sleep(100);
+
+            while (true)
+            {
+                if (ms.Length > 0)
+                {
+
+                }
+            }
+
+        }
+
+        private void backgroundPictChecker_DoWork(object sender, DoWorkEventArgs e)
         {
 
         }

@@ -1,0 +1,32 @@
+c:\users\ken\documents\visual studio 2012\Projects\SirialCommnication\SirialCommnication\bin\Debug\SirialCommnication.exe
+c:\users\ken\documents\visual studio 2012\Projects\SirialCommnication\SirialCommnication\bin\Debug\SirialCommnication.pdb
+c:\users\ken\documents\visual studio 2012\Projects\SirialCommnication\SirialCommnication\obj\Debug\SirialCommnication.csprojResolveAssemblyReference.cache
+c:\users\ken\documents\visual studio 2012\Projects\SirialCommnication\SirialCommnication\obj\Debug\SirialCommnication.Form1.resources
+c:\users\ken\documents\visual studio 2012\Projects\SirialCommnication\SirialCommnication\obj\Debug\SirialCommnication.Properties.Resources.resources
+c:\users\ken\documents\visual studio 2012\Projects\SirialCommnication\SirialCommnication\obj\Debug\SirialCommnication.csproj.GenerateResource.Cache
+c:\users\ken\documents\visual studio 2012\Projects\SirialCommnication\SirialCommnication\obj\Debug\SirialCommnication.exe
+c:\users\ken\documents\visual studio 2012\Projects\SirialCommnication\SirialCommnication\obj\Debug\SirialCommnication.pdb
+C:\Users\ken\jpegCam\JpegCamera\SirialCommunication\SirialCommnication\obj\Debug\SirialCommnication.exe
+C:\Users\ken\jpegCam\JpegCamera\SirialCommunication\SirialCommnication\obj\Debug\SirialCommnication.pdb
+C:\Users\ken\jpegCam\JpegCamera\SirialCommunication\SirialCommnication\bin\Debug\SirialCommnication.exe
+C:\Users\ken\jpegCam\JpegCamera\SirialCommunication\SirialCommnication\bin\Debug\SirialCommnication.pdb
+C:\Users\ken\jpegCam\JpegCamera\SirialCommunication\SirialCommnication\obj\Debug\SirialCommnication.csprojResolveAssemblyReference.cache
+C:\Users\ken\jpegCam\JpegCamera\SirialCommunication\SirialCommnication\obj\Debug\SirialCommnication.Form1.resources
+C:\Users\ken\jpegCam\JpegCamera\SirialCommunication\SirialCommnication\obj\Debug\SirialCommnication.Properties.Resources.resources
+C:\Users\ken\jpegCam\JpegCamera\SirialCommunication\SirialCommnication\obj\Debug\SirialCommnication.csproj.GenerateResource.Cache
+C:\Users\ken\Desktop\SirialCommunication\SirialCommnication\obj\Debug\SirialCommnication.exe
+C:\Users\ken\Desktop\SirialCommunication\SirialCommnication\obj\Debug\SirialCommnication.pdb
+C:\Users\ken\Desktop\SirialCommunication\SirialCommnication\bin\Debug\SirialCommnication.exe
+C:\Users\ken\Desktop\SirialCommunication\SirialCommnication\bin\Debug\SirialCommnication.pdb
+C:\Users\ken\Desktop\SirialCommunication\SirialCommnication\obj\Debug\SirialCommnication.csprojResolveAssemblyReference.cache
+C:\Users\ken\Desktop\SirialCommunication\SirialCommnication\obj\Debug\SirialCommnication.Form1.resources
+C:\Users\ken\Desktop\SirialCommunication\SirialCommnication\obj\Debug\SirialCommnication.Properties.Resources.resources
+C:\Users\ken\Desktop\SirialCommunication\SirialCommnication\obj\Debug\SirialCommnication.csproj.GenerateResource.Cache
+C:\Users\ken\Desktop\SirialCommunicationV0.91\SirialCommnication\obj\Debug\SirialCommnication.exe
+C:\Users\ken\Desktop\SirialCommunicationV0.91\SirialCommnication\obj\Debug\SirialCommnication.pdb
+C:\Users\ken\Desktop\SirialCommunicationV0.91\SirialCommnication\bin\Debug\SirialCommnication.exe
+C:\Users\ken\Desktop\SirialCommunicationV0.91\SirialCommnication\bin\Debug\SirialCommnication.pdb
+C:\Users\ken\Desktop\SirialCommunicationV0.91\SirialCommnication\obj\Debug\SirialCommnication.csprojResolveAssemblyReference.cache
+C:\Users\ken\Desktop\SirialCommunicationV0.91\SirialCommnication\obj\Debug\SirialCommnication.Form1.resources
+C:\Users\ken\Desktop\SirialCommunicationV0.91\SirialCommnication\obj\Debug\SirialCommnication.Properties.Resources.resources
+C:\Users\ken\Desktop\SirialCommunicationV0.91\SirialCommnication\obj\Debug\SirialCommnication.csproj.GenerateResource.Cache
