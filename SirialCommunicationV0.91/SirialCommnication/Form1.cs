@@ -170,7 +170,8 @@ namespace SirialCommnication
 
                         //pictureBox1.Image.Dispose();
                         pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-                        pictureBox1.Image = System.Drawing.Image.FromFile(@fname);
+                        //pictureBox1.Image = System.Drawing.Image.FromFile(@fname);
+                        pictureBox1.Image = CreateImage(@fname);
 
 
                     }));
@@ -179,7 +180,16 @@ namespace SirialCommnication
 
             }
         }
-        
+        public static System.Drawing.Image CreateImage(string filename)
+        {
+            System.IO.FileStream fs = new System.IO.FileStream(
+                filename,
+                System.IO.FileMode.Open,
+                System.IO.FileAccess.Read);
+            System.Drawing.Image img = System.Drawing.Image.FromStream(fs);
+            fs.Close();
+            return img;
+        }
 
 
         private void StatusText(String data)
