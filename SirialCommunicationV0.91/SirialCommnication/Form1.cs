@@ -41,6 +41,7 @@ namespace SirialCommnication
                     serialPort1.PortName = comboBox2.Text;
                     serialPort1.BaudRate = 115200;
                     serialPort1.Open();
+                    serialPort1.ReadTimeout = 500;
                     progressBar1.Value = 100;
                     button3.Enabled = false;
                     button4.Enabled = true;
@@ -51,6 +52,7 @@ namespace SirialCommnication
             {
                 richTextBox1.Text = "Unauthorized Access";
             }
+           
 
             backgroundWorker1.WorkerSupportsCancellation = true;
             backgroundWorker1.RunWorkerAsync();
@@ -90,13 +92,9 @@ namespace SirialCommnication
                         state = 1;
                         
                     }
-                    else
-                    {
-                        if (DataNumberWait() != 1)
-                        {
-                            state = 0;
-                        }
-                    }
+
+                    ConvertJpeg();
+                   
                 }
                 else
                 {
@@ -136,7 +134,21 @@ namespace SirialCommnication
                 }
                 StatusText("read:" + read);
             }
+
+
             StatusText("break:");
+            return 1;
+        }
+
+
+        private int ConvertJpeg()
+        {
+            ms.Seek(0, SeekOrigin.Begin);
+
+            waitInit();
+
+
+
             return 1;
         }
         private int StartDataWait()
@@ -298,18 +310,17 @@ namespace SirialCommnication
         private int RecData(int offset, int size)
         {
             int i;
-
             if (serialPort1.IsOpen == false)
             {
                 return -2;
             }
-
             try
             {
                 i = serialPort1.Read(rec, offset, size);
             }
             catch (TimeoutException)
             {
+                StatusText("timeout:");
                 i = 0;
             }
             catch (InvalidOperationException)
@@ -346,13 +357,67 @@ namespace SirialCommnication
 
                 }
             }
-
         }
 
-        private void backgroundPictChecker_DoWork(object sender, DoWorkEventArgs e)
+
+        int wait_init_state = 0;
+
+        private int waitInit(){
+            byte[] buff = new byte[4];
+            byte[] start = new byte[2];
+            start[0] = 0xFF;
+            start[1] = 0xD8;
+            while (true)
+            {
+                if (ms.Read(buff, 0, 1) != 0)
+                {
+                    switch (wait_init_state)
+                    {
+                        case 0:
+                            if (buff[0] == start[0])
+                            {
+                                wait_init_state = 1;
+                                StatusText("wait1");
+                            }
+                            break;
+
+                        case 1:
+                            if (buff[0] == start[1])
+                            {
+                                StatusText("wait2");
+                                return 1;
+                            }
+                            wait_init_state = 0;
+                            break;
+                    }
+                }
+
+            }
+            
+
+            return 1;
+        }
+
+        private void backgroundPictChecker_DoWork_1(object sender, DoWorkEventArgs e)
         {
+            int state = 0;
+            while (true)
+            {
+                switch (state)
+                {
+                    case 0:
+                        state = waitInit();
+                        break;
 
+                    case 1:
+
+                        break;
+
+                }
+            }         
         }
+
+
 
 
     }

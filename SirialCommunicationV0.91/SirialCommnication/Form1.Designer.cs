@@ -156,7 +156,7 @@
             // 
             // backgroundPictChecker
             // 
-            this.backgroundPictChecker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundPictChecker_DoWork);
+            this.backgroundPictChecker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundPictChecker_DoWork_1);
             // 
             // Form1
             // 

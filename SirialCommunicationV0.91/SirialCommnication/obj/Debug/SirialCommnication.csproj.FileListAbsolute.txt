@@ -30,3 +30,11 @@ C:\Users\ken\Desktop\SirialCommunicationV0.91\SirialCommnication\obj\Debug\Siria
 C:\Users\ken\Desktop\SirialCommunicationV0.91\SirialCommnication\obj\Debug\SirialCommnication.Form1.resources
 C:\Users\ken\Desktop\SirialCommunicationV0.91\SirialCommnication\obj\Debug\SirialCommnication.Properties.Resources.resources
 C:\Users\ken\Desktop\SirialCommunicationV0.91\SirialCommnication\obj\Debug\SirialCommnication.csproj.GenerateResource.Cache
+C:\Users\ken\Desktop\Project\JpegCamera\SirialCommunicationV0.91\SirialCommnication\obj\Debug\SirialCommnication.exe
+C:\Users\ken\Desktop\Project\JpegCamera\SirialCommunicationV0.91\SirialCommnication\obj\Debug\SirialCommnication.pdb
+C:\Users\ken\Desktop\Project\JpegCamera\SirialCommunicationV0.91\SirialCommnication\bin\Debug\SirialCommnication.exe
+C:\Users\ken\Desktop\Project\JpegCamera\SirialCommunicationV0.91\SirialCommnication\bin\Debug\SirialCommnication.pdb
+C:\Users\ken\Desktop\Project\JpegCamera\SirialCommunicationV0.91\SirialCommnication\obj\Debug\SirialCommnication.csprojResolveAssemblyReference.cache
+C:\Users\ken\Desktop\Project\JpegCamera\SirialCommunicationV0.91\SirialCommnication\obj\Debug\SirialCommnication.Form1.resources
+C:\Users\ken\Desktop\Project\JpegCamera\SirialCommunicationV0.91\SirialCommnication\obj\Debug\SirialCommnication.Properties.Resources.resources
+C:\Users\ken\Desktop\Project\JpegCamera\SirialCommunicationV0.91\SirialCommnication\obj\Debug\SirialCommnication.csproj.GenerateResource.Cache
