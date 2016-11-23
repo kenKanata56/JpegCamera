@@ -44,7 +44,6 @@ namespace SirialCommnication
                     serialPort1.ReadTimeout = 500;
                     progressBar1.Value = 100;
                     button3.Enabled = false;
-                    button4.Enabled = true;
                     serialPort1.RtsEnable = false;// Enable RTS for flow control
                 }
             }
@@ -57,8 +56,7 @@ namespace SirialCommnication
             backgroundWorker1.WorkerSupportsCancellation = true;
             backgroundWorker1.RunWorkerAsync();
 
-            backgroundPictChecker.WorkerSupportsCancellation = true;
-            backgroundPictChecker.RunWorkerAsync();
+   
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -66,7 +64,6 @@ namespace SirialCommnication
             backgroundWorker1.CancelAsync();
             serialPort1.Close();
             progressBar1.Value = 0;
-            button4.Enabled = false;
             button3.Enabled = true;
             
         }
@@ -75,7 +72,6 @@ namespace SirialCommnication
         byte[] rec = new byte[4096]; 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
-            int state = 0;
 
             for (; ; )
             {
@@ -86,21 +82,13 @@ namespace SirialCommnication
                 }
                 if (RecDataCheck())
                 {
-                    if (state == 0)
-                    {
-                        AllgetData();
-                        state = 1;
-                        
-                    }
+                    //データ取得
+                    AllgetData();
 
+                    //画像化
                     ConvertJpeg();
                    
                 }
-                else
-                {
-                   //System.Threading.Thread.Sleep(100);
-                }
-                
             }
         }
         MemoryStream ms;
@@ -112,169 +100,87 @@ namespace SirialCommnication
         {
             DisposeMs();
             ms = new MemoryStream(0xFFFF);
-
+            StatusText("受信中");
             while (true)
             {
                 int read = RecData(0, rec.Length);
-                //int read = serialPort1.Read(buf, 0, buf.Length);
 
                 if (read > 0)
                 {
                     ms.Write(rec, 0, read);
-                    
+                    this.Invoke((MethodInvoker)(() => { richTextBox1.AppendText("・"); }));
                     System.Threading.Thread.Sleep(100);
                 }
                 else if(read == 0)
                 {
                     break;
                 }
-                else 
-                {
-
-                }
-                StatusText("read:" + read);
             }
-
-
-            StatusText("break:");
             return 1;
         }
 
 
         private int ConvertJpeg()
         {
+            byte[] pict_data = new byte[512];
+            byte[] p_data = new byte[8];
+
+            DateTime dateNow = DateTime.Now;
+            String fileName = dateNow.ToString("yyyyMMddHHmmss");
+            string fname = "pict" + fileName + ".jpg";
+            FileStream fs = new FileStream(fname, FileMode.Create, FileAccess.Write);
+
             ms.Seek(0, SeekOrigin.Begin);
 
             waitInit();
-
-
-
-            return 1;
-        }
-        private int StartDataWait()
-        {
-            
-            byte[] start = new byte[2];
-            start[0] = 0xFF;
-            start[1] = 0xD8;
-            
-            for (int i = 0; i < 2; i++)
-            {
-
-                if (RecData(0, 1) < 0)
-                {
-                    return -1;
-                }
-                rcv_data.Add(rec[0]);
-                if (rec[0] != start[i])
-                {
-                    return -1;
-                }
-            }
-            DisposeMs();
-            ms = new MemoryStream(0xFFFF);
-            ms.Write(start, 0, 2);
-
+            byte[] temp = new byte[2]{0xFF,0xD8};
+            fs.Write(temp, 0, 2);
             int count = rcv_data.Count;
-
             byte data1 = (byte)rcv_data[count - 3];
             byte data2 = (byte)rcv_data[count - 4];
 
             pictsize = data1 * 256 + data2;
-
-
-            if (RecData(0, pictsize) < 0)
-            {
-                return -1;
-            }
-            ms.Write(rec, 0, pictsize - 2);
-            //StatusText("Start");
-            return 1;
-        }
-
-        private int DataNumberWait(){
+            ms.Read(pict_data, 0, pictsize);
+            //最初に2byte読み込んでるので2引く
+            fs.Write(pict_data, 0, pictsize - 2);
 
             int[] counter = new int[2];
             int cnt = 1;
             int datasize = pictsize;
-
             for (; ; )
             {
                 counter[1] = (cnt & 0xFF00) >> 8;
                 counter[0] = (cnt & 0x00FF);
 
-                if (RecData(0, 4) < 0)
+                if (ms.Read(p_data,0, 4) < 0)
                 {
                     return -1;
                 }
-                /*
-                for (int i = 0; i < 2; i++)
-                {
-
-                    if (RecData(0, 1) < 0)
-                    {
-                        return -1;
-                    }
-
-                    if (rec[0] != counter[i])
-                    {
-                       // return -1;
-                    }
-                }
-                 * */
-                datasize = rec[2] + rec[3] * 256;
-                //int size = getData();
-                /*
-                if (0 > size || size > 1024)
-                {
-                    return -1;
-                }
-                 * */
-                if (RecData(0, datasize + 2) < 0)
-                {
-                    return -1;
-                }
-                ms.Write(rec, 0, datasize);
-                //StatusText("packet[" + cnt + "]");
-
+                pictsize = p_data[2] + p_data[3] * 256;
+                StatusText("data size:" + pictsize);
+                ms.Read(pict_data, 0, pictsize + 2);
+                //ファイル書き込み
+                fs.Write(pict_data, 0, pictsize);
 
                 if (datasize != pictsize)
                 {
-                    StatusText("End");
-                    DateTime dateNow = DateTime.Now;
-                    String fileName = dateNow.ToString("yyyyMMddHHmmss");
-                    string fname = "pict" + fileName + ".jpg";
-                    FileStream fs = new FileStream(fname,FileMode.Create,FileAccess.Write);
-                    int fileSize = (int)ms.Length;
-                    byte[] buf = new byte[1024];
-                    int remain = fileSize;
-                    int readSize;
-                    ms.Seek(0, SeekOrigin.Begin);
-
-                    while (remain > 0)
-                    {
-                        readSize = ms.Read(buf, 0, Math.Min(1024, remain));
-                        fs.Write(buf, 0, readSize);
-                        remain -= readSize;
-                    }
                     fs.Dispose();
-                    StatusText("SUCCESS!!");
-                    StatusText("Save;"+fname);
+                    this.Invoke((MethodInvoker)(() =>
+                    {
 
-                    this.Invoke((MethodInvoker)(() => {
+                        //pictureBox1.Image.Dispose();
+                        pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+                        pictureBox1.Image = System.Drawing.Image.FromFile(@fname);
 
-//pictureBox1.Image.Dispose();
-                            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-                            pictureBox1.Image = System.Drawing.Image.FromFile(@fname);
 
-                        
                     }));
-                    //System.Threading.Thread.Sleep(1000);
-                    return -1;
+                    return 1;
                 }
-                cnt++;
+
             }
         }
+        
+
 
         private void StatusText(String data)
         {
@@ -320,7 +226,7 @@ namespace SirialCommnication
             }
             catch (TimeoutException)
             {
-                StatusText("timeout:");
+                StatusText("完了");
                 i = 0;
             }
             catch (InvalidOperationException)
@@ -371,20 +277,19 @@ namespace SirialCommnication
             {
                 if (ms.Read(buff, 0, 1) != 0)
                 {
+                    rcv_data.Add(buff[0]);
                     switch (wait_init_state)
                     {
                         case 0:
                             if (buff[0] == start[0])
                             {
                                 wait_init_state = 1;
-                                StatusText("wait1");
                             }
                             break;
 
                         case 1:
                             if (buff[0] == start[1])
                             {
-                                StatusText("wait2");
                                 return 1;
                             }
                             wait_init_state = 0;
@@ -393,32 +298,6 @@ namespace SirialCommnication
                 }
 
             }
-            
-
-            return 1;
         }
-
-        private void backgroundPictChecker_DoWork_1(object sender, DoWorkEventArgs e)
-        {
-            int state = 0;
-            while (true)
-            {
-                switch (state)
-                {
-                    case 0:
-                        state = waitInit();
-                        break;
-
-                    case 1:
-
-                        break;
-
-                }
-            }         
-        }
-
-
-
-
     }
 }
